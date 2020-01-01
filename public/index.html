@@ -5,11 +5,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
-  <h1>Hello World! Goodbye World!</h1>
-  <button id ='scrapeData'>Scrape Data</button>
+    <nav>
+      <div class="nav-wrapper card blue-grey darken-1">
+        <a href="#!" class="brand-logo">Mongo Scraper</a>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li><a href="./index.html">Home</a></li>
+          <li><a href="./savedHtml/saved.html">Saved Articles</a></li>
+          <li><button id='scrapeData'>Scrape Articles</button></li>
+          <li><a class="waves-effect waves-light btn" id='deleteData'>Clear Articles</a></li>
+        </ul>
+      </div>
+    </nav>
+      <ul class="sidenav" id="mobile-demo">
+        <li><a href="sass.html">Sass</a></li>
+        <li><a href="badges.html">Components</a></li>
+        <li><a href="collapsible.html">Javascript</a></li>
+        <li><a href="mobile.html">Mobile</a></li>
+      </ul>
+<div class='container'>
+  <img class='mainImg' src='./assets/images/npr-logo.jpg' style='width:100%  '>
+  <div class='centered'>MONGO SCRAPER</div>
+  <div class='bottom'>EDITION</div>
+</div>
+
+      <div id='articles'>
+      
+      </div>
+
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+      <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+      <script src="app.js"></script>
 </body>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="app.js"></script>
 </html>

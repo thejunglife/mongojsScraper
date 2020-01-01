@@ -4,40 +4,65 @@ const cheerio = require('cheerio')
 const db = require('mongojs')('articledb')
 
 module.exports = app => {
-
-  // scraping the articles!
-  // axios.get('https://www.npr.org/sections/news/')
-  //     .then(({ data: html }) => {
-  //         const $ = cheerio.load(html)
-  //         $('h2.title').each((i, elem) => {
-  //           db.articles.insert({heading: $(elem).text() })
-  //         })
-  //     })
-  //     .catch(e => console.error(e))
-
-  // GET all articles
-  app.get('/articles', (req, res) => {
-    Article.find()
+// GET all saved articles
+app.get('/savedHtml/savedArticles', (req, res) => {
+    Article.find({ isSaved: true })
+        .populate('comments')
         .then(articles => {
           res.json(articles)
         })
         .catch(e => console.error(e))
-  })
-      // POST one articles
-  app.post('/articles', (req, res) => {
-   axios.get('https://www.npr.org/sections/news/')
+})
+// GET all articles with refresh
+app.get('/article', (req, res) => {
+  Article.find({ isSaved: false })
+      .populate('comments')
+      .then(articles => {
+        res.json(articles)
+      })
+      .catch(e => console.error(e))
+})
+  // GET all articles after SCRAPING articles
+  app.get('/articles', (req, res) => {
+   
+     axios.get('https://www.npr.org/sections/news/')
       .then(({ data: html }) => {
           const $ = cheerio.load(html)
 
-          $('div.item-info').each((i, elem) => {
-            console.log(elem)
-            // db.articles.insert({heading: $(elem).text() })
+          $('div.item-info').each((i, el) => {
+            const heading = $(el).children('h2').text()
+            const summary = $(el).children('p').text()
+            const url = $(el).children('h2').children('a').attr('href')
+            console.log(url)
+            db.articles.insert({
+              heading: heading,
+              summary: summary,
+              url: url,
+              isSaved: false
+            })
           })
+
       })
+      .then(() => {
+        Article.find({ isSaved: false })
+            .populate('comments')
+            .then(articles => {
+              res.json(articles)
+            })
+            .catch(e => console.error(e))
+      })
+      .catch(e => console.error(e))
+  })
+  
+  // Update article to save
+  app.put('/articles/:id', (req, res) => {
+
+      Article.updateOne({ _id:req.params.id}, { isSaved: true })
       .then(() => res.sendStatus(200))
       .catch(e => console.error(e))
   })
 
+// Delete all articles
   app.delete('/articles', (req, res) => {
     Article.deleteMany()
         .then(() =>res.sendStatus(200))
